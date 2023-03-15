@@ -11,6 +11,7 @@ class Snake(models.Model):
     age = models.IntegerField()
     weight = models.IntegerField()
     genetics = models.CharField(max_length=100)
+    paired = models.BooleanField(default=False)
 
 
 class Feeding(models.Model):
@@ -41,3 +42,9 @@ class Cleaning(models.Model):
     def save(self, *args, **kwargs):
         self.calculate_next_cleaning()
         super().save(*args, **kwargs)
+
+class BreedingPair(models.Model):
+    male = models.ForeignKey(Snake, on_delete=models.CASCADE, related_name='breeding_pairs_as_male')
+    female = models.ForeignKey(Snake, on_delete=models.CASCADE, related_name='breeding_pairs_as_female')
+    start_date = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
