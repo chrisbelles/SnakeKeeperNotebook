@@ -26,3 +26,18 @@ class Feeding(models.Model):
         self.next_feeding = next_feeding_datetime.date()
         super().save(*args, **kwargs)
 
+
+class Cleaning(models.Model):
+    snake = models.ForeignKey(Snake, on_delete=models.CASCADE)
+    last_cleaned = models.DateField()
+    cleaning_interval = models.IntegerField(default=30)
+    next_cleaning = models.DateField(blank=True, null=True)
+
+    def calculate_next_cleaning(self):
+        last_cleaned_datetime = timezone.make_aware(datetime.combine(self.last_cleaned, datetime.min.time()))
+        next_cleaning_datetime = last_cleaned_datetime + timedelta(days=self.cleaning_interval)
+        self.next_cleaning = next_cleaning_datetime.date()
+
+    def save(self, *args, **kwargs):
+        self.calculate_next_cleaning()
+        super().save(*args, **kwargs)
