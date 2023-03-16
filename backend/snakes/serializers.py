@@ -7,7 +7,7 @@ from .models import Snake, Feeding, Cleaning, BreedingPair
 class SnakeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Snake
-        fields = ['id', 'name', 'gender', 'age', 'weight', 'genetics', 'paired']
+        fields = ['id', 'name', 'gender', 'age', 'weight', 'genetics', 'paired', 'is_up_to_date']
         depth = 1
 
 class FeedingSerializer(serializers.ModelSerializer):
