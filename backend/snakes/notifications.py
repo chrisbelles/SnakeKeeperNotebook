@@ -2,8 +2,12 @@ from datetime import datetime
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
+from celery import shared_task
+from celery.schedules import crontab
 from .models import Snake
 
+
+@shared_task
 def send_reminders():
     today = timezone.now().date()
     snakes_to_feed = Snake.objects.filter(next_feeding=today)
@@ -26,3 +30,10 @@ def send_reminders():
             [snake.user.email],
             fail_silently=False,
         )
+
+CELERY_BEAT_SCHEDULE = {
+    'send_reminders': {
+        'task': 'notifications.send_reminders',
+        'schedule': crontab(hour=8, minute=0), # set to the time you want the reminders to be sent
+    },
+}
