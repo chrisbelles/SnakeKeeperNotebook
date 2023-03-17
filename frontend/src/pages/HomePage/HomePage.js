@@ -9,6 +9,7 @@ const HomePage = () => {
     <div className="container">
       <h1>Notebook for {user.username}!</h1>
       <Link to="/user-snakes">View Your Snakes</Link>
+      <Link to="/add-snake">Add a Snake</Link>
     </div>
   );
 };

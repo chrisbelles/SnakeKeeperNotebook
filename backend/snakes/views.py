@@ -31,3 +31,14 @@ def user_snakes(request):
         snakes = Snake.objects.filter(user_id=request.user.id)
         serializer = SnakeSerializer(snakes, many=True)
         return Response(serializer.data)
+    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_snake(request, pk):
+    try:
+        snake = Snake.objects.get(id=pk, user=request.user)
+    except Snake.DoesNotExist:
+        return Response({'error': 'Snake not found.'}, status=status.HTTP_404_NOT_FOUND)
+    snake.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
