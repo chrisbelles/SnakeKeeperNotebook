@@ -8,7 +8,7 @@ const UserSnakes = () => {
   const [snakes, setSnakes] = useState([]);
 
   useEffect(() => {
-    const fetchSnakes = async () => {
+    const fetchSnakes = async (token) => {
       try {
         let response = await axios.get("http://127.0.0.1:8000/api/snakes/", {
           headers: {
@@ -21,7 +21,7 @@ const UserSnakes = () => {
         console.log(error.response.data);
       }
     };
-    fetchSnakes();
+    fetchSnakes(token);
   }, [token]);
 
   return (

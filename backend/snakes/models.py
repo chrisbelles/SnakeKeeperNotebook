@@ -3,9 +3,14 @@ from authentication.models import User
 from django.utils import timezone
 from datetime import datetime, timedelta,date
 
+from django.conf import settings
+from django.db import models
+from django.utils import timezone
+from datetime import datetime, timedelta
+
 
 class Snake(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     gender = models.CharField(max_length=10)
     age = models.IntegerField()
@@ -37,6 +42,8 @@ class Snake(models.Model):
 
     def is_up_to_date(self):
         now = timezone.now().date()
+        last_feeding = None
+        last_cleaning = None
         if self.paired:
             return False
         try:
@@ -65,7 +72,7 @@ class Snake(models.Model):
         except Cleaning.DoesNotExist:
             print(f"{self.name} is not up-to-date: needs cleaning")
             pass
-        if last_feeding.marked_complete and last_cleaning.marked_complete:
+        if last_feeding and last_cleaning and last_feeding.marked_complete and last_cleaning.marked_complete:
             print(f"{self.name} is up-to-date")
             return True
         else:
@@ -74,8 +81,10 @@ class Snake(models.Model):
     is_up_to_date.boolean = True
     is_up_to_date.short_description = 'Up-to-date'
 
+
     def __str__(self):
         return self.name
+
 
 class Feeding(models.Model):
     snake = models.ForeignKey(Snake, on_delete=models.CASCADE)
