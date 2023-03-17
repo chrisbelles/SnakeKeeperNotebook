@@ -15,6 +15,7 @@ const UserSnakes = () => {
             Authorization: "Bearer " + token,
           },
         });
+        console.log(response.data);
         setSnakes(response.data);
       } catch (error) {
         console.log(error.response.data);
@@ -39,16 +40,20 @@ const UserSnakes = () => {
           </tr>
         </thead>
         <tbody>
-          {snakes.map((snake) => (
-            <tr key={snake.id}>
-              <td>{snake.name}</td>
-              <td>{snake.gender}</td>
-              <td>{snake.age}</td>
-              <td>{snake.weight}</td>
-              <td>{snake.genetics}</td>
-              <td>{snake.paired ? "Yes" : "No"}</td>
-            </tr>
-          ))}
+          {snakes &&
+            snakes.map((snake) => {
+              console.log(snake);
+              return (
+                <tr key={snake.id}>
+                  <td>{snake.name}</td>
+                  <td>{snake.gender}</td>
+                  <td>{snake.age}</td>
+                  <td>{snake.weight}</td>
+                  <td>{snake.genetics}</td>
+                  <td>{snake.paired ? "Yes" : "No"}</td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
     </div>
@@ -56,3 +61,4 @@ const UserSnakes = () => {
 };
 
 export default UserSnakes;
+

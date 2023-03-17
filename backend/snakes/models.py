@@ -112,13 +112,12 @@ class Cleaning(models.Model):
     marked_complete = models.BooleanField(default=False)
 
     def calculate_next_cleaning(self):
-        last_cleaned_datetime = timezone.make_aware(datetime.combine(self.last_cleaned, datetime.min.time()))
-        days = self.cleaning_interval
-        next_cleaning_datetime = last_cleaned_datetime + timedelta(days=days)
+        last_cleaned_datetime = datetime.combine(self.last_cleaned, datetime.min.time())
+        next_cleaning_datetime = last_cleaned_datetime + timedelta(days=self.cleaning_interval)
         self.next_cleaning = next_cleaning_datetime.date()
 
-        now = timezone.now()
-        if last_cleaned_datetime <= now <= next_cleaning_datetime:
+        now = timezone.now().date()
+        if last_cleaned_datetime.date() <= now <= next_cleaning_datetime.date():
             self.marked_complete = True
         else:
             self.marked_complete = False
@@ -129,7 +128,6 @@ class Cleaning(models.Model):
 
     def __str__(self):
         return f"{self.snake.name}'s cleaning schedule"
-
 
 
 
