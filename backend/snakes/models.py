@@ -2,11 +2,8 @@ from django.db import models
 from authentication.models import User
 from django.utils import timezone
 from datetime import datetime, timedelta,date
-
 from django.conf import settings
 from django.db import models
-from django.utils import timezone
-from datetime import datetime, timedelta
 
 
 class Snake(models.Model):
@@ -77,6 +74,13 @@ class Snake(models.Model):
             return True
         else:
             return False
+    
+    # def is_fed(self):
+    #     try:
+    #         last_feeding = self.feeding_set.latest('last_fed')
+    #         return last_feeding.next_feeding == datetime.now().date()
+    #     except Feeding.DoesNotExist:
+    #         return False
 
     is_up_to_date.boolean = True
     is_up_to_date.short_description = 'Up-to-date'

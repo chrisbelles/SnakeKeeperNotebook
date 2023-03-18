@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
+import SnakeMessages from "../../SnakeMessages/SnakeMessages";
+
+<SnakeMessages />
 
 const UserSnakes = () => {
   const [user, token] = useAuth();

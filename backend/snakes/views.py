@@ -4,9 +4,21 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from .models import Snake
 from .serializers import SnakeSerializer
+from django.http import JsonResponse
 
 
-
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_snake_messages(request):
+    print('get_snake_messages called')
+    snakes = Snake.objects.all()
+    messages = []
+    for snake in snakes:
+        if snake.needs_feeding():
+            messages.append(f"{snake.name} is not up-to-date: feeding not marked complete")
+        if snake.needs_cleaning():
+            messages.append(f"{snake.name} is not up-to-date: cleaning not marked complete")
+    return JsonResponse({"messages": messages})
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
