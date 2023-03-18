@@ -54,3 +54,18 @@ def delete_snake(request, pk):
     snake.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_snake(request, pk):
+    try:
+        snake = Snake.objects.get(id=pk, user=request.user)
+    except Snake.DoesNotExist:
+        return Response({'error': 'Snake not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+    serializer = SnakeSerializer(snake, data=request.data)
+        
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
