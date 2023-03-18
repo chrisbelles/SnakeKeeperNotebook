@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import SnakeMessages from "../../SnakeMessages/SnakeMessages";
+import "./UserSnakes.css";
 
 <SnakeMessages />
 
@@ -42,9 +43,13 @@ const UserSnakes = () => {
 
   return (
     <div className="container">
-      <h1>Your Snakes</h1>
-      <Link to="/">Go back to home</Link>
-      <Link to="/add-snake">Add a new snake</Link>
+      <h1>Your Collection</h1>
+      <br></br>
+      <div className="links-container">
+        <Link to="/">Go back to home</Link>
+        <Link to="/add-snake">Add a new snake</Link>
+      </div>
+      <br></br>
       <table>
         <thead>
           <tr>

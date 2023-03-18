@@ -17,7 +17,7 @@ li {
 }
 
 .navBar button {
-  background: transparent;
+  background: gray;
   border: 2px solid black;
   color: black;
   padding: 0.4rem 0.5rem;

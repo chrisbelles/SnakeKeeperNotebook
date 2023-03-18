@@ -21,36 +21,12 @@ const LoginPage = () => {
   return (
     <div className="container">
       <div className="images-container">
-        <img
-          className="left-image"
-          src={require("../../images/Super-Enchi-GHI-Yellowbelly-Spotnose-Hypo-Clown-olive.jpg")}
-          alt="left snake"
-        />
-        <img
-          className="right-image"
-          src={require("../../images/Orange-Dream-Yellowbelly-Cypress-Special-Clown-olive.jpg")}
-          alt="right snake"
-        />
+        <img className="left-image" src={require("../../images/Super-Enchi-GHI-Yellowbelly-Spotnose-Hypo-Clown-olive.jpg")} alt="left snake" />
+        <img className="right-image" src={require("../../images/Orange-Dream-Yellowbelly-Cypress-Special-Clown-olive.jpg")} alt="right snake" />
       </div>
       <form className="form" onSubmit={handleSubmit}>
-        <label>
-          Username:{" "}
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleInputChange}
-          />
-        </label>
-        <label>
-          Password:{" "}
-          <input
-            type="text"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-          />
-        </label>
+        <label> Username:{" "} <input type="text" name="username" value={formData.username} onChange={handleInputChange} /></label>
+        <label> Password:{" "} <input type="text" name="password" value={formData.password} onChange={handleInputChange} /></label>
         {isServerError ? (
           <p className="error">Login failed, incorrect credentials!</p>
         ) : null}
