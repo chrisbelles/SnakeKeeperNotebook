@@ -44,28 +44,40 @@ def user_snakes(request):
         serializer = SnakeSerializer(snakes, many=True)
         return Response(serializer.data)
     
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def delete_snake(request, pk):
-    try:
-        snake = Snake.objects.get(id=pk, user=request.user)
-    except Snake.DoesNotExist:
-        return Response({'error': 'Snake not found.'}, status=status.HTTP_404_NOT_FOUND)
-    snake.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
-
-@api_view(['PUT'])
+@api_view(['PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def update_snake(request, pk):
     try:
         snake = Snake.objects.get(id=pk, user=request.user)
     except Snake.DoesNotExist:
         return Response({'error': 'Snake not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = SnakeSerializer(snake, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        snake.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# @api_view(['PUT'])
+# @permission_classes([AllowAny])
+# def update_snake(request, pk):
+#     try:
+#         snake = Snake.objects.get(id=pk)
+#     except Snake.DoesNotExist:
+#         return Response({'error': 'Snake not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+#     serializer = SnakeSerializer(snake, data=request.data)
         
-    serializer = SnakeSerializer(snake, data=request.data)
-        
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(serializer.data)
+#     else:
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
