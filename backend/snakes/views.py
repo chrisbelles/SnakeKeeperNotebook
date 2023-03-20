@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from .models import Snake, Feeding, Cleaning
-from .serializers import SnakeSerializer
+from .serializers import SnakeSerializer, FeedingSerializer, CleaningSerializer
 from django.http import JsonResponse
 
 
@@ -69,15 +69,15 @@ def update_snake(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def get_feedings(request):
     feedings = Feeding.objects.all()
-    data = [{'snake_name': feeding.snake.name, 'time': feeding.time} for feeding in feedings]
-    return Response(data)
+    serializer = FeedingSerializer(feedings, many=True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def get_cleanings(request):
     cleanings = Cleaning.objects.all()
-    data = [{'snake_name': cleaning.snake.name, 'time': cleaning.time} for cleaning in cleanings]
-    return Response(data)
+    serializer = CleaningSerializer(cleanings, many=True)
+    return Response(serializer.data)
