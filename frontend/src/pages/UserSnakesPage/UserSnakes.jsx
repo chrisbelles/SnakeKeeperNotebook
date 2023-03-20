@@ -44,7 +44,7 @@ const UserSnakes = () => {
       age: prompt("Please enter updated snake age:"),
       weight: prompt("Please enter updated snake weight:"),
       genetics: prompt("Please enter updated snake genetics:"),
-      paired: prompt("Is the snake paired? Enter true or false:"),
+      paired: prompt("Is the snake paired? Enter Yes or No:"),
     };
     if (updatedSnake.name !== null) {
       try {
@@ -86,6 +86,7 @@ const UserSnakes = () => {
             <th>Weight</th>
             <th>Genetics</th>
             <th>Paired</th>
+            <th>Upto Date</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -100,7 +101,8 @@ const UserSnakes = () => {
                   <td>{snake.age}</td>
                   <td>{snake.weight}</td>
                   <td>{snake.genetics}</td>
-                  <td>{snake.paired ? "Yes" : "No"}</td>
+                  <td><input type="checkbox" checked={snake.paired} onChange={() => {}} /></td>
+                  <td><input type="checkbox" checked={snake.is_up_to_date} onChange={() => {}} /></td>
                   <td>
                     <button onClick={() => handleEdit(snake.id)}>
                       Edit

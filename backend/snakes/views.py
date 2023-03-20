@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
-from .models import Snake
+from .models import Snake, Feeding, Cleaning
 from .serializers import SnakeSerializer
 from django.http import JsonResponse
 
@@ -53,7 +53,11 @@ def update_snake(request, pk):
         return Response({'error': 'Snake not found.'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
-        serializer = SnakeSerializer(snake, data=request.data)
+        data = request.data.copy()
+        paired = data.pop('paired', None)
+        if paired is not None:
+            snake.paired = paired.lower() == 'true'
+        serializer = SnakeSerializer(snake, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -64,20 +68,16 @@ def update_snake(request, pk):
         snake.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_feedings(request):
+    feedings = Feeding.objects.all()
+    data = [{'snake_name': feeding.snake.name, 'time': feeding.time} for feeding in feedings]
+    return Response(data)
 
-# @api_view(['PUT'])
-# @permission_classes([AllowAny])
-# def update_snake(request, pk):
-#     try:
-#         snake = Snake.objects.get(id=pk)
-#     except Snake.DoesNotExist:
-#         return Response({'error': 'Snake not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-#     serializer = SnakeSerializer(snake, data=request.data)
-        
-#     if serializer.is_valid():
-#         serializer.save()
-#         return Response(serializer.data)
-#     else:
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_cleanings(request):
+    cleanings = Cleaning.objects.all()
+    data = [{'snake_name': cleaning.snake.name, 'time': cleaning.time} for cleaning in cleanings]
+    return Response(data)

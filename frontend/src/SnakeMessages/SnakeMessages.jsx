@@ -5,11 +5,25 @@ const SnakeMessages = () => {
 
   useEffect(() => {
     fetch("/api/snakes/messages/")
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const contentType = response.headers.get("content-type");
+        if (contentType.includes("application/json")) {
+          return response.json();
+        } else {
+          return response.text();
+        }
+      })
       .then((data) => {
-        console.log(data);
-        setMessages(data.messages);
-      });
+        if (typeof data === "string") {
+          setMessages([data]);
+        } else {
+          setMessages(data.messages);
+        }
+      })
+      .catch((error) => console.error("Error fetching messages", error));
   }, []);
 
   return (
@@ -22,5 +36,3 @@ const SnakeMessages = () => {
 };
 
 export default SnakeMessages;
-
-

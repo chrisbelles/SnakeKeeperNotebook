@@ -18,6 +18,10 @@ class SnakeSerializer(serializers.ModelSerializer):
         instance.paired = validated_data.get('paired', instance.paired)
         instance.save()
         return instance
+    def validate_age(self, value):
+        if value < 0:
+            raise serializers.ValidationError("Age must be a positive integer")
+        return value
 
 class FeedingSerializer(serializers.ModelSerializer):
     class Meta:
