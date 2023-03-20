@@ -94,45 +94,50 @@ const UserSnakes = () => {
         </thead>
         <tbody>
           {snakes &&
-            snakes.map((snake) => {
-              console.log(snake);
-              return (
-                <tr key={snake.id}>
-                  <td>{snake.name}</td>
-                  <td>{snake.gender}</td>
-                  <td>{snake.age}</td>
-                  <td>{snake.weight}</td>
-                  <td>{snake.genetics}</td>
-                  <td>
-                    <input type="checkbox" checked={snake.paired} onChange={() => {}} />
-                  </td>
-                  <td>
-                    <input type="checkbox" checked={snake.is_up_to_date} onChange={() => {}} />
-                  </td>
-                  <td>
-                    {snake.needs_feeding ? (
-                      <p>Needs feeding</p>
-                    ) : (
-                      <p>Feeding up-to-date</p>
-                    )}
-                  </td>
-                  <td>
-                    {snake.needs_cleaning ? (
-                      <p>Needs cleaning</p>
-                    ) : (
-                      <p>Cleaning up-to-date</p>
-                    )}
-                  </td>
-                  <td>
-                    <button onClick={() => handleEdit(snake.id)}>Edit</button>
-                    <button onClick={() => handleDelete(snake.id)}>Delete</button>
-                  </td>
-                </tr>
-              );
-            })}
+            snakes.map((snake) => (
+              <tr key={snake.id}>
+                <td>{snake.name}</td>
+                <td>{snake.gender}</td>
+                <td>{snake.age}</td>
+                <td>{snake.weight}</td>
+                <td>{snake.genetics}</td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={snake.paired}
+                    onChange={() => {}}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={snake.is_up_to_date}
+                    onChange={() => {}}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={snake.needs_cleaning}
+                    onChange={() => {}}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={snake.needs_feeding}
+                    onChange={() => {}}
+                  />
+                </td>
+                <td>
+                  <button onClick={() => handleEdit(snake.id)}>Edit</button>
+                  <button onClick={() => handleDelete(snake.id)}>Delete</button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
-      </div>
+    </div>
   );
-}
+};
 export default UserSnakes;
