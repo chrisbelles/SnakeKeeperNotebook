@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-const FeedingTable = () => {
+const FeedingTable = (props) => {
+    console.log(props.feedings); 
   const [feedings, setFeedings] = useState([]);
 
   useEffect(() => {
@@ -12,25 +13,26 @@ const FeedingTable = () => {
   }, []);
 
   return (
-    <div>
-      <h3>Feeding Schedule:</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Snake Name</th>
-            <th>Time</th>
+    <table>
+      <thead>
+        <tr>
+          <th>Snake</th>
+          <th>Last Fed</th>
+          <th>Next Feeding</th>
+          <th>Marked Complete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {props.feedings.map((feeding) => (
+          <tr key={feeding.id}>
+            <td>{feeding.snake.name}</td>
+            <td>{feeding.feeding.last_fed}</td>
+            <td>{feeding.feeding.next_feeding}</td>
+            <td>{feeding.feeding.marked_complete ? 'Yes' : 'No'}</td>
           </tr>
-        </thead>
-        <tbody>
-          {feedings.map((feeding) => (
-            <tr key={feeding.id}>
-              <td>{feeding.snake_name}</td>
-              <td>{feeding.time}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+        ))}
+      </tbody>
+    </table>
   );
 };
 

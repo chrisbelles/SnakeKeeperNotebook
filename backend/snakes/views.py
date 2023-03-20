@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from .models import Snake, Feeding, Cleaning
 from .serializers import SnakeSerializer, FeedingSerializer, CleaningSerializer
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 
 @api_view(['GET'])
@@ -70,14 +70,44 @@ def update_snake(request, pk):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def get_feedings(request):
-    feedings = Feeding.objects.all()
-    serializer = FeedingSerializer(feedings, many=True)
-    return Response(serializer.data)
+def get_feedings(request, id=None):
+    print('get_feedings called')
+    if id:
+        try:
+            feeding = Feeding.objects.get(id=id)
+            serializer = FeedingSerializer(feeding)
+            return Response(serializer.data)
+        except Feeding.DoesNotExist:
+            return Response(status=404)
+    else:
+        feedings = Feeding.objects.all()
+        data = []
+        for feeding in feedings:
+            snake_data = SnakeSerializer(feeding.snake).data
+            data.append({
+                'feeding': FeedingSerializer(feeding).data,
+                'snake': snake_data,
+            })
+        return Response(data)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def get_cleanings(request):
-    cleanings = Cleaning.objects.all()
-    serializer = CleaningSerializer(cleanings, many=True)
-    return Response(serializer.data)
+def get_cleanings(request, id=None):
+    print('get_cleanings called')
+    if id:
+        try:
+            cleaning = Cleaning.objects.get(id=id)
+            serializer = CleaningSerializer(cleaning)
+            return Response(serializer.data)
+        except Cleaning.DoesNotExist:
+            return Response(status=404)
+    else:
+        cleanings = Cleaning.objects.all()
+        data = []
+        for cleaning in cleanings:
+            snake_data = SnakeSerializer(cleaning.snake).data
+            data.append({
+                'cleaning': CleaningSerializer(cleaning).data,
+                'snake': snake_data,
+            })
+        return Response(data)

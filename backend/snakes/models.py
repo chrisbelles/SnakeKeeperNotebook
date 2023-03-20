@@ -14,6 +14,9 @@ class Snake(models.Model):
     weight = models.IntegerField()
     genetics = models.CharField(max_length=100)
     paired = models.BooleanField(default=False)
+    needs_feeding = models.BooleanField(default=False)
+    needs_cleaning = models.BooleanField(default=False)
+    is_up_to_date = models.BooleanField(default=False)
 
     @property
     def breeding_pair(self):
@@ -23,71 +26,57 @@ class Snake(models.Model):
         else:
             return None
 
-    def needs_feeding(self):
-        try:
-            last_feeding = self.feeding_set.latest('last_fed')
-            return last_feeding.next_feeding == datetime.now().date()
-        except Feeding.DoesNotExist:
-            return False
-
-    def needs_cleaning(self):
-        try:
-            last_cleaning = self.cleaning_set.latest('last_cleaned')
-            return last_cleaning.next_cleaning == datetime.now().date()
-        except Cleaning.DoesNotExist:
-            return False
-
-    def is_up_to_date(self):
+    def update_status(self):
         now = timezone.now().date()
         last_feeding = None
         last_cleaning = None
         if self.paired:
-            return False
+            self.needs_feeding = False
+            self.needs_cleaning = False
+            self.is_up_to_date = False
+            self.save()
+            return
         try:
             last_feeding = self.feeding_set.latest('last_fed')
             next_feeding = last_feeding.next_feeding
             if last_feeding.last_fed <= now <= next_feeding:
                 if not last_feeding.marked_complete:
-                    print(f"{self.name} is not up-to-date: feeding not marked complete")
-                    return False
+                    self.needs_feeding = False
+                    self.needs_cleaning = False
+                    self.is_up_to_date = False
+                    self.save()
+                    return
+                else:
+                    self.needs_feeding = False
             else:
-                print(f"{self.name} is not up-to-date: needs feeding")
-                return False
+                self.needs_feeding = True
         except Feeding.DoesNotExist:
-            print(f"{self.name} is not up-to-date: needs feeding")
-            pass
+            self.needs_feeding = True
         try:
             last_cleaning = self.cleaning_set.latest('last_cleaned')
             next_cleaning = last_cleaning.next_cleaning
             if last_cleaning.last_cleaned <= now <= next_cleaning:
                 if not last_cleaning.marked_complete:
-                    print(f"{self.name} is not up-to-date: cleaning not marked complete")
-                    return False
+                    self.needs_feeding = False
+                    self.needs_cleaning = False
+                    self.is_up_to_date = False
+                    self.save()
+                    return
+                else:
+                    self.needs_cleaning = False
             else:
-                print(f"{self.name} is not up-to-date: needs cleaning")
-                return False
+                self.needs_cleaning = True
         except Cleaning.DoesNotExist:
-            print(f"{self.name} is not up-to-date: needs cleaning")
-            pass
+            self.needs_cleaning = True
         if last_feeding and last_cleaning and last_feeding.marked_complete and last_cleaning.marked_complete:
-            print(f"{self.name} is up-to-date")
-            return True
+            self.is_up_to_date = True
         else:
-            return False
-    
-    # def is_fed(self):
-    #     try:
-    #         last_feeding = self.feeding_set.latest('last_fed')
-    #         return last_feeding.next_feeding == datetime.now().date()
-    #     except Feeding.DoesNotExist:
-    #         return False
-
-    is_up_to_date.boolean = True
-    is_up_to_date.short_description = 'Up-to-date'
-
+            self.is_up_to_date = False
+        self.save()
 
     def __str__(self):
         return self.name
+
 
 
 class Feeding(models.Model):

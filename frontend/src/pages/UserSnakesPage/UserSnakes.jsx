@@ -53,7 +53,7 @@ const UserSnakes = () => {
           updatedSnake,
           {
             headers: {
-            Authorization: "Bearer " + token,
+              Authorization: "Bearer " + token,
             },
           }
         );
@@ -86,7 +86,9 @@ const UserSnakes = () => {
             <th>Weight</th>
             <th>Genetics</th>
             <th>Paired</th>
-            <th>Upto Date</th>
+            <th>Up to date</th>
+            <th>Needs Feeding</th>
+            <th>Needs Cleaning</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -101,23 +103,36 @@ const UserSnakes = () => {
                   <td>{snake.age}</td>
                   <td>{snake.weight}</td>
                   <td>{snake.genetics}</td>
-                  <td><input type="checkbox" checked={snake.paired} onChange={() => {}} /></td>
-                  <td><input type="checkbox" checked={snake.is_up_to_date} onChange={() => {}} /></td>
                   <td>
-                    <button onClick={() => handleEdit(snake.id)}>
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(snake.id)}>
-                      Delete
-                    </button>
+                    <input type="checkbox" checked={snake.paired} onChange={() => {}} />
+                  </td>
+                  <td>
+                    <input type="checkbox" checked={snake.is_up_to_date} onChange={() => {}} />
+                  </td>
+                  <td>
+                    {snake.needs_feeding ? (
+                      <p>Needs feeding</p>
+                    ) : (
+                      <p>Feeding up-to-date</p>
+                    )}
+                  </td>
+                  <td>
+                    {snake.needs_cleaning ? (
+                      <p>Needs cleaning</p>
+                    ) : (
+                      <p>Cleaning up-to-date</p>
+                    )}
+                  </td>
+                  <td>
+                    <button onClick={() => handleEdit(snake.id)}>Edit</button>
+                    <button onClick={() => handleDelete(snake.id)}>Delete</button>
                   </td>
                 </tr>
               );
             })}
         </tbody>
       </table>
-    </div>
+      </div>
   );
-};
-
+}
 export default UserSnakes;
