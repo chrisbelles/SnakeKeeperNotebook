@@ -109,23 +109,23 @@ const UserSnakes = () => {
                   />
                 </td>
                 <td>
+                <input
+                  type="checkbox"
+                  checked={snake.is_up_to_date}
+                  onChange={() => {}}
+                />
+                </td>
+                <td>
                   <input
                     type="checkbox"
-                    checked={snake.is_up_to_date}
+                    defaultChecked={snake.needs_cleaning}
                     onChange={() => {}}
                   />
                 </td>
                 <td>
                   <input
                     type="checkbox"
-                    checked={snake.needs_cleaning}
-                    onChange={() => {}}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={snake.needs_feeding}
+                    defaultChecked={snake.needs_feeding}
                     onChange={() => {}}
                   />
                 </td>

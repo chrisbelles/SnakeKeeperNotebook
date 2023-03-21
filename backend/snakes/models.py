@@ -4,6 +4,8 @@ from django.utils import timezone
 from datetime import datetime, timedelta,date
 from django.conf import settings
 from django.db import models
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 
 class Snake(models.Model):
@@ -16,8 +18,11 @@ class Snake(models.Model):
     paired = models.BooleanField(default=False)
     needs_feeding = models.BooleanField(default=False)
     needs_cleaning = models.BooleanField(default=False)
-    is_up_to_date = models.BooleanField(default=False)
-
+    
+    @property
+    def is_up_to_date(self):
+        return not (self.needs_feeding or self.needs_cleaning)
+    
     @property
     def breeding_pair(self):
         pairs = BreedingPair.objects.filter(models.Q(male=self) | models.Q(female=self))
@@ -33,7 +38,6 @@ class Snake(models.Model):
         if self.paired:
             self.needs_feeding = False
             self.needs_cleaning = False
-            self.is_up_to_date = False
             self.save()
             return
         try:
@@ -41,42 +45,31 @@ class Snake(models.Model):
             next_feeding = last_feeding.next_feeding
             if last_feeding.last_fed <= now <= next_feeding:
                 if not last_feeding.marked_complete:
-                    self.needs_feeding = False
-                    self.needs_cleaning = False
-                    self.is_up_to_date = False
-                    self.save()
-                    return
+                    self.needs_feeding = True
                 else:
                     self.needs_feeding = False
             else:
                 self.needs_feeding = True
         except Feeding.DoesNotExist:
             self.needs_feeding = True
+
         try:
             last_cleaning = self.cleaning_set.latest('last_cleaned')
             next_cleaning = last_cleaning.next_cleaning
             if last_cleaning.last_cleaned <= now <= next_cleaning:
                 if not last_cleaning.marked_complete:
-                    self.needs_feeding = False
-                    self.needs_cleaning = False
-                    self.is_up_to_date = False
-                    self.save()
-                    return
+                    self.needs_cleaning = True
                 else:
                     self.needs_cleaning = False
             else:
                 self.needs_cleaning = True
         except Cleaning.DoesNotExist:
             self.needs_cleaning = True
-        if last_feeding and last_cleaning and last_feeding.marked_complete and last_cleaning.marked_complete:
-            self.is_up_to_date = True
-        else:
-            self.is_up_to_date = False
+
         self.save()
 
     def __str__(self):
         return self.name
-
 
 
 class Feeding(models.Model):
@@ -104,6 +97,10 @@ class Feeding(models.Model):
 
     def __str__(self):
         return f'{self.snake.name} - Last Fed: {self.last_fed.strftime("%m/%d/%Y")} - Next Feeding: {self.next_feeding.strftime("%m/%d/%Y")}'
+    
+@receiver(post_save, sender=Feeding)
+def update_snake_feeding(sender, instance, **kwargs):
+    instance.snake.update_status()
 
 
 class Cleaning(models.Model):
@@ -130,6 +127,10 @@ class Cleaning(models.Model):
 
     def __str__(self):
         return f"{self.snake.name}'s cleaning schedule"
+    
+@receiver(post_save, sender=Cleaning)
+def update_snake_cleaning(sender, instance, **kwargs):
+    instance.snake.update_status()
 
 
 
