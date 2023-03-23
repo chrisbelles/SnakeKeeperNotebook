@@ -1,15 +1,21 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 
-const CleaningTable = (props) => {
-    console.log(props.cleanings); 
+const CleaningTable = () => {
   const [cleanings, setCleanings] = useState([]);
 
   useEffect(() => {
-    fetch("/api/snakes/cleanings/")
-      .then((response) => response.json())
-      .then((data) => {
-        setCleanings(data);
-      });
+    const fetchCleanings = async () => {
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8000/api/snakes/cleanings/"
+        );
+        setCleanings(response.data);
+      } catch (error) {
+        console.log(error.response.data);
+      }
+    };
+    fetchCleanings();
   }, []);
 
   return (
@@ -23,12 +29,12 @@ const CleaningTable = (props) => {
         </tr>
       </thead>
       <tbody>
-        {props.cleanings.map((cleaning) => (
-          <tr key={cleaning.id}>
+        {cleanings.map((cleaning) => (
+          <tr key={`cleaning-${cleaning.id}`}>
             <td>{cleaning.snake.name}</td>
             <td>{cleaning.cleaning.last_cleaned}</td>
             <td>{cleaning.cleaning.next_cleaning}</td>
-            <td>{cleaning.cleaning.marked_complete ? 'Yes' : 'No'}</td>
+            <td>{cleaning.cleaning.marked_complete ? "Yes" : "No"}</td>
           </tr>
         ))}
       </tbody>

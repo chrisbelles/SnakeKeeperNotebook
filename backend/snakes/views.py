@@ -71,7 +71,7 @@ def update_snake(request, pk):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_feedings(request, id=None):
-    print('get_feedings called')
+    print('get_feedings called')  # this line
     if id:
         try:
             feeding = Feeding.objects.get(id=id)
@@ -88,6 +88,7 @@ def get_feedings(request, id=None):
                 'feeding': FeedingSerializer(feeding).data,
                 'snake': snake_data,
             })
+        print(data)  # this line
         return Response(data)
 
 @api_view(['GET'])

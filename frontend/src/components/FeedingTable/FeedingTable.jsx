@@ -1,15 +1,19 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 
-const FeedingTable = (props) => {
-    console.log(props.feedings); 
+const FeedingTable = () => {
   const [feedings, setFeedings] = useState([]);
 
   useEffect(() => {
-    fetch("/api/snakes/feedings/")
-      .then((response) => response.json())
-      .then((data) => {
-        setFeedings(data);
-      });
+    const fetchFeedings = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/snakes/feedings/');
+        setFeedings(response.data);
+      } catch (error) {
+        console.log(error.response.data);
+      }
+    };
+    fetchFeedings();
   }, []);
 
   return (
@@ -23,8 +27,8 @@ const FeedingTable = (props) => {
         </tr>
       </thead>
       <tbody>
-        {props.feedings.map((feeding) => (
-          <tr key={feeding.id}>
+        {feedings.map((feeding, index) => (
+          <tr key={feeding.id ? feeding.id : `feeding-${index}`}>
             <td>{feeding.snake.name}</td>
             <td>{feeding.feeding.last_fed}</td>
             <td>{feeding.feeding.next_feeding}</td>
