@@ -24,15 +24,17 @@ const CleaningTable = () => {
         <tr>
           <th>Snake</th>
           <th>Last Cleaned</th>
+          <th>Cleaning Interval</th>
           <th>Next Cleaning</th>
           <th>Marked Complete</th>
         </tr>
       </thead>
       <tbody>
         {cleanings.map((cleaning) => (
-          <tr key={`cleaning-${cleaning.id}`}>
+          <tr key={cleaning.id ? cleaning.id :`cleaning-${cleaning.id}`}>
             <td>{cleaning.snake.name}</td>
             <td>{cleaning.cleaning.last_cleaned}</td>
+            <td>{cleaning.cleaning.cleaning_interval}</td>
             <td>{cleaning.cleaning.next_cleaning}</td>
             <td>{cleaning.cleaning.marked_complete ? "Yes" : "No"}</td>
           </tr>

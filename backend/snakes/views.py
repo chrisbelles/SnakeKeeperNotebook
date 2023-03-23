@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
@@ -71,7 +72,7 @@ def update_snake(request, pk):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_feedings(request, id=None):
-    print('get_feedings called')  # this line
+    print('get_feedings called')
     if id:
         try:
             feeding = Feeding.objects.get(id=id)
@@ -88,7 +89,7 @@ def get_feedings(request, id=None):
                 'feeding': FeedingSerializer(feeding).data,
                 'snake': snake_data,
             })
-        print(data)  # this line
+        print(data)
         return Response(data)
 
 @api_view(['GET'])

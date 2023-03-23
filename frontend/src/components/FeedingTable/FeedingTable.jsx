@@ -22,6 +22,7 @@ const FeedingTable = () => {
         <tr>
           <th>Snake</th>
           <th>Last Fed</th>
+          <th>Feeding Interval</th>
           <th>Next Feeding</th>
           <th>Marked Complete</th>
         </tr>
@@ -31,6 +32,7 @@ const FeedingTable = () => {
           <tr key={feeding.id ? feeding.id : `feeding-${index}`}>
             <td>{feeding.snake.name}</td>
             <td>{feeding.feeding.last_fed}</td>
+            <td>{feeding.feeding.feeding_interval}</td>
             <td>{feeding.feeding.next_feeding}</td>
             <td>{feeding.feeding.marked_complete ? 'Yes' : 'No'}</td>
           </tr>
