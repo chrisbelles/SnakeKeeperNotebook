@@ -69,13 +69,19 @@ def update_snake(request, pk):
         snake.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 @permission_classes([AllowAny])
 def get_feedings(request, id=None):
     print('get_feedings called')
     if id:
         try:
             feeding = Feeding.objects.get(id=id)
+            if request.method == 'PUT':
+                serializer = FeedingSerializer(feeding, data=request.data)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             serializer = FeedingSerializer(feeding)
             return Response(serializer.data)
         except Feeding.DoesNotExist:
@@ -89,16 +95,22 @@ def get_feedings(request, id=None):
                 'feeding': FeedingSerializer(feeding).data,
                 'snake': snake_data,
             })
-        print(data)
         return Response(data)
 
-@api_view(['GET'])
+
+@api_view(['GET', 'PUT'])
 @permission_classes([AllowAny])
 def get_cleanings(request, id=None):
     print('get_cleanings called')
     if id:
         try:
             cleaning = Cleaning.objects.get(id=id)
+            if request.method == 'PUT':
+                serializer = CleaningSerializer(cleaning, data=request.data)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             serializer = CleaningSerializer(cleaning)
             return Response(serializer.data)
         except Cleaning.DoesNotExist:

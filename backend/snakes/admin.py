@@ -5,7 +5,7 @@ from django.utils import timezone
 
 
 class FeedingAdmin(admin.ModelAdmin):
-    list_display = ('snake', 'last_fed', 'feeding_interval', 'next_feeding', 'mark_feeding_completed')
+    list_display = ('id', 'snake', 'last_fed', 'feeding_interval', 'next_feeding', 'mark_feeding_completed')
 
     def mark_feeding_completed(self, obj):
         return obj.marked_complete
@@ -14,7 +14,7 @@ class FeedingAdmin(admin.ModelAdmin):
 
 
 class CleaningAdmin(admin.ModelAdmin):
-    list_display = ('snake', 'last_cleaned', 'cleaning_interval', 'next_cleaning', 'mark_cleaning_completed')
+    list_display = ('id', 'snake', 'last_cleaned', 'cleaning_interval', 'next_cleaning', 'mark_cleaning_completed')
 
     def mark_cleaning_completed(self, obj):
         return obj.marked_complete

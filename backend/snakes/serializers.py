@@ -4,13 +4,13 @@ from .models import Snake, Feeding, Cleaning, BreedingPair
 class FeedingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feeding
-        fields = ('last_fed', 'feeding_interval', 'next_feeding', 'marked_complete')
+        fields = ('id', 'last_fed', 'feeding_interval', 'next_feeding', 'marked_complete')
         depth = 1
 
 class CleaningSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cleaning
-        fields = ('last_cleaned', 'cleaning_interval', 'next_cleaning', 'marked_complete')
+        fields = ('id', 'last_cleaned', 'cleaning_interval', 'next_cleaning', 'marked_complete')
         depth = 1
 
 class SnakeSerializer(serializers.ModelSerializer):
