@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import FeedingTable from "../../components/FeedingTable/FeedingTable";
 import CleaningTable from "../../components/CleaningTable/CleaningTable";
+import BreedingPairsTable from "../../components/BreedingPairsTable/BreedingPairsTable";
 
 const styles = {
   addsnakelink: {
@@ -40,6 +41,8 @@ const HomePage = () => {
         <FeedingTable feedings={feedings} />
         <h2>Cleanings</h2>
         <CleaningTable cleanings={cleanings} />
+        <h2>Breeding Pairs</h2>
+        <BreedingPairsTable />
       </div>
   );
 };

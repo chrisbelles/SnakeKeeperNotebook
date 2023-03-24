@@ -3,8 +3,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
-from .models import Snake, Feeding, Cleaning
-from .serializers import SnakeSerializer, FeedingSerializer, CleaningSerializer
+from .models import Snake, Feeding, Cleaning, BreedingPair
+from .serializers import SnakeSerializer, FeedingSerializer, CleaningSerializer, BreedingPairSerializer
 from django.http import JsonResponse, HttpResponse
 
 
@@ -125,3 +125,42 @@ def get_cleanings(request, id=None):
                 'snake': snake_data,
             })
         return Response(data)
+    
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([AllowAny])
+def breeding_pair_detail(request, id):
+    try:
+        breeding_pair = BreedingPair.objects.get(id=id)
+    except BreedingPair.DoesNotExist:
+        return Response(status=404)
+
+    if request.method == 'GET':
+        serializer = BreedingPairSerializer(breeding_pair)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = BreedingPairSerializer(breeding_pair, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        breeding_pair.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
+def breeding_pair_list(request):
+    if request.method == 'GET':
+        breeding_pairs = BreedingPair.objects.all()
+        serializer = BreedingPairSerializer(breeding_pairs, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = BreedingPairSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

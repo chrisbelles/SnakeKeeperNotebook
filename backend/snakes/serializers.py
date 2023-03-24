@@ -66,3 +66,15 @@ class SnakeSerializer(serializers.ModelSerializer):
         for cleaning in cleaning_mapping.values():
             cleaning.delete()
         return instance
+    
+
+class BreedingPairSerializer(serializers.ModelSerializer):
+    male = serializers.PrimaryKeyRelatedField(queryset=Snake.objects.all())
+    female = serializers.PrimaryKeyRelatedField(queryset=Snake.objects.all())
+    male_name = serializers.ReadOnlyField(source='male.name')
+    female_name = serializers.ReadOnlyField(source='female.name')
+
+    class Meta:
+        model = BreedingPair
+        fields = ['id', 'male', 'male_name', 'female', 'female_name', 'start_date', 'end_date', 'is_paired']
+

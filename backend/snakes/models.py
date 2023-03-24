@@ -135,8 +135,8 @@ def update_snake_cleaning(sender, instance, **kwargs):
 
 
 class BreedingPair(models.Model):
-    male = models.ForeignKey(Snake, on_delete=models.CASCADE, related_name='breeding_pairs_as_male')
-    female = models.ForeignKey(Snake, on_delete=models.CASCADE, related_name='breeding_pairs_as_female')
+    male = models.ForeignKey(Snake, on_delete=models.CASCADE, related_name='breeding_pairs_as_male', limit_choices_to={'gender': 'male'})
+    female = models.ForeignKey(Snake, on_delete=models.CASCADE, related_name='breeding_pairs_as_female', limit_choices_to={'gender': 'female'})
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
 
