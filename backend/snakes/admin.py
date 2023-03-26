@@ -54,7 +54,6 @@ class SnakeAdmin(admin.ModelAdmin):
     is_up_to_date.short_description = 'Up-to-date'
 
 
-
 class BreedingPairAdmin(admin.ModelAdmin):
     list_display = ('male', 'female', 'is_paired', 'start_date', 'end_date')
 
@@ -67,7 +66,6 @@ class BreedingPairAdmin(admin.ModelAdmin):
     def delete_queryset(self, request, queryset):
         for obj in queryset:
             obj.delete()
-
 
 
 admin.site.register(Snake, SnakeAdmin)

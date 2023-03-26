@@ -12,8 +12,8 @@ urlpatterns = [
     path('cleanings/<int:id>/', views.get_cleanings, name='get_cleaning'),
     path('breeding-pairs/', views.breeding_pair_list, name='breeding_pair_list'),
     path('breeding-pairs/<int:id>/', views.breeding_pair_detail, name='breeding_pair_detail'),
-    path('males/', views.male_list, name='male_list'),
-    path('males/<int:id>/', views.male_detail, name='male_detail'),
+    path('males/', views.males_list, name='male_list'),
+    # path('males/<int:id>/', views.male_detail, name='male_detail'),
     path('females/', views.female_list, name='female_list'),
-    path('females/<int:id>/', views.female_detail, name='female_detail'),
+    # path('females/<int:id>/', views.female_detail, name='female_detail'),
 ]

@@ -3,7 +3,7 @@ from authentication.models import User
 from django.utils import timezone
 from datetime import datetime, timedelta,date
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
@@ -145,16 +145,17 @@ class BreedingPair(models.Model):
     is_paired.boolean = True
     is_paired.short_description = 'Paired'
 
+    @transaction.atomic
     def save(self, *args, **kwargs):
-        # set paired field to True for both male and female snakes
-        self.male.paired = True
-        self.female.paired = True
-        self.male.save()
-        self.female.save()
+        if not self.pk:
+            self.male.paired = True
+            self.female.paired = True
+            self.male.save()
+            self.female.save()
         super().save(*args, **kwargs)
 
+    @transaction.atomic
     def delete(self, *args, **kwargs):
-        # unset paired field for both male and female snakes
         self.male.paired = False
         self.female.paired = False
         self.male.save()

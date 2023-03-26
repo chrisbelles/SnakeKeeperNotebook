@@ -78,3 +78,4 @@ class BreedingPairSerializer(serializers.ModelSerializer):
         model = BreedingPair
         fields = ['id', 'male', 'male_name', 'female', 'female_name', 'start_date', 'end_date', 'is_paired']
 
+    
