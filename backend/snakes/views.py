@@ -186,13 +186,13 @@ def female_list(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def create_feeding(request):
+    print(request.data)
     if request.method == 'POST':
         serializer = FeedingSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

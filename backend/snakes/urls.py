@@ -8,7 +8,7 @@ urlpatterns = [
     path('<int:pk>/', views.update_snake, name='update_snake'),
     path('feedings/', views.get_feedings, name='get_feedings'),
     path('feedings/<int:id>/', views.get_feedings, name='get_feeding'),
-    path('feedings/add/', views.create_feeding),
+    path('feedings/add/', views.create_feeding, name='create-feeding'),
     path('cleanings/', views.get_cleanings, name='get_cleanings'),
     path('cleanings/<int:id>/', views.get_cleanings, name='get_cleaning'),
     path('breeding-pairs/', views.breeding_pair_list, name='breeding_pair_list'),

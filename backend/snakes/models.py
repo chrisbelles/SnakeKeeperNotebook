@@ -98,9 +98,9 @@ class Feeding(models.Model):
     def __str__(self):
         return f'{self.snake.name} - Last Fed: {self.last_fed.strftime("%m/%d/%Y")} - Next Feeding: {self.next_feeding.strftime("%m/%d/%Y")}'
     
-@receiver(post_save, sender=Feeding)
-def update_snake_feeding(sender, instance, **kwargs):
-    instance.snake.update_status()
+# @receiver(post_save, sender=Feeding)
+# def update_snake_feeding(sender, instance, **kwargs):
+#     instance.snake.update_status()
 
 
 class Cleaning(models.Model):

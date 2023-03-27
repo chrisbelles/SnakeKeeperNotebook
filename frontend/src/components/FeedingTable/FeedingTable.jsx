@@ -79,7 +79,7 @@ const FeedingTable = () => {
   };
 
   const [newFeeding, setNewFeeding] = useState({
-    snake: "",
+    snake_id: selectedSnake.id,
     last_fed: "",
     feeding_interval: "",
   });
@@ -94,34 +94,38 @@ const FeedingTable = () => {
       });
       const snakes = response.data;
   
-      const selected = window.prompt(
-        "Select a snake:",
-        snakes.map((s) => s.name).join(", ")
-      );
-      if (selected) {
-        const selectedSnake = snakes.find((s) => s.name === selected);
-        setNewFeeding({
-          snake: selectedSnake.id,
+      let selectedSnake = null;
+      for (const snake of snakes) {
+        if (window.confirm(`Select ${snake.name}?`)) {
+          selectedSnake = snake;
+          break;
+        }
+      }
+  
+      if (selectedSnake) {
+        const newFeedingData = {
+          snake_id: selectedSnake.id,
           last_fed: window.prompt("Enter last fed date (yyyy-mm-dd):"),
           feeding_interval: window.prompt("Enter feeding interval:"),
-        });
+        };
+        console.log("New feeding object:", newFeedingData);
   
         const createResponse = await axios.post(
           "http://127.0.0.1:8000/api/snakes/feedings/add/",
-          newFeeding,
+          newFeedingData,
           {
             headers: {
               Authorization: "Bearer " + token,
             },
           }
         );
-        const newFeedingData = {
+        const newFeedingEntry = {
           feeding: createResponse.data,
           snake: selectedSnake,
         };
-        setFeedings([...feedings, newFeedingData]);
+        setFeedings([...feedings, newFeedingEntry]);
         setNewFeeding({
-          snake: "",
+          snake_id: selectedSnake.id,
           last_fed: "",
           feeding_interval: "",
         });
@@ -131,7 +135,9 @@ const FeedingTable = () => {
     }
   };
   
-
+  
+  
+  
   return (
     <table>
       <thead>
