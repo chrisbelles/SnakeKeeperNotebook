@@ -180,4 +180,26 @@ def female_list(request):
     if request.method == 'GET':
         female_snakes = Snake.objects.filter(gender='Female')
         serializer = SnakeSerializer(female_snakes, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)\
+        
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def create_feeding(request):
+    if request.method == 'POST':
+        serializer = FeedingSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def create_cleaning(request):
+    if request.method == 'POST':
+        serializer = CleaningSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

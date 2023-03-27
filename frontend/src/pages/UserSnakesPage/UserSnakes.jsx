@@ -140,4 +140,5 @@ const UserSnakes = () => {
     </div>
   );
 };
+
 export default UserSnakes;
